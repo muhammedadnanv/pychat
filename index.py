@@ -1,12 +1,15 @@
-from transformers import pipeline
+import requests
 
-# Initialize the text generation pipeline with Meta-Llama-3-8B
-text_gen_pipeline = pipeline("text-generation", model="meta-llama/Meta-Llama-3-8B")
+API_URL = "https://api-inference.huggingface.co/models/meta-llama/Meta-Llama-3-8B"
+headers = {"Authorization": "Bearer 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"}
+
+def query(payload):
+    response = requests.post(API_URL, headers=headers, json=payload)
+    return response.json()
 
 def generate_response(user_input):
-    # Generate a response from the model
-    response = text_gen_pipeline(user_input, max_length=100, num_return_sequences=1)
-    return response[0]['generated_text']
+    output = query({"inputs": user_input})
+    return output[0]['generated_text']
 
 def chat():
     print("Hello! I am your chatbot. How can I assist you today?")
